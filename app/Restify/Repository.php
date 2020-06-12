@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Restify;
+
+use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
+use Illuminate\Contracts\Pagination\Paginator;
+
+abstract class Repository extends RestifyRepository
+{
+    /**
+     * Build an "index" query for the given repository.
+     *
+     * @param  RestifyRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(RestifyRequest $request, $query)
+    {
+        return $query;
+    }
+
+    /**
+     * Build an "detail" query for the given repository.
+     *
+     * @param  RestifyRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function detailQuery(RestifyRequest $request, $query)
+    {
+        return $query;
+    }
+
+    public function index(RestifyRequest $request)
+    {
+        return parent::index($request);
+    }
+
+    public function show(RestifyRequest $request, $repositoryId)
+    {
+        return parent::show($request, $repositoryId);
+    }
+
+
+    public function store(RestifyRequest $request)
+    {
+        return parent::store($request);
+    }
+
+    public function update(RestifyRequest $request, $repositoryId)
+    {
+        return parent::update($request, $repositoryId);
+    }
+
+    public function destroy(RestifyRequest $request, $repositoryId)
+    {
+        return parent::destroy($request, $repositoryId);
+    }
+
+}

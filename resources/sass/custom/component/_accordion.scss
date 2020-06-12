@@ -1,0 +1,7 @@
+.accordion-title {
+	&[aria-expanded="true"]{
+  		.accordion-collapse-icon {
+  			transform: rotate(180deg);
+  		}
+  	}
+}

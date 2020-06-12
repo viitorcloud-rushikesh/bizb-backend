@@ -1,0 +1,2 @@
+models:
+    Models\User: { name: string, email: string, username: string, mobile: 'string nullable', email_verified_at: 'datetime nullable', mobile_verified_at: 'datetime nullable', password: string, timezone: 'string nullable', last_login_at: 'datetime nullable', last_login_ip: 'string nullable', remember_token: 'string:100 nullable', extra_attributes: 'json nullable', created_by: 'biginteger unsigned nullable', updated_by: 'biginteger unsigned nullable', deleted_by: 'biginteger unsigned nullable' }
