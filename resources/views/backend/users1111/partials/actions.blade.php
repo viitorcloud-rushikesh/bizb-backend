@@ -8,3 +8,7 @@
    >
 	<i class="fas fa-trash"></i>
 </a>
+{{-- <form id="{{ $model->id }}" method="POST" action="{{ route('backend.users.destroy', $model->id) }}" class="hidden">
+    @csrf
+    <input type="hidden" name="_method" value="DELETE">
+</form> --}}
