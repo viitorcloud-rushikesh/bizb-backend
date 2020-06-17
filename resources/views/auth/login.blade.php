@@ -1,4 +1,4 @@
-<x-layouts.simple>
+<x-backend.layouts.simple>
     <!-- Page Content -->
     <div class="bg-image" style="background-image: url('assets/media/photos/photo22@2x.jpg');">
         <div class="row no-gutters bg-primary-op">
@@ -7,7 +7,7 @@
                 <div class="p-3 w-100">
                     <!-- Header -->
                     <div class="mb-3 text-center">
-                        <a class="link-fx font-w700 font-size-h1" href="{{ route('landing') }}">
+                        <a class="link-fx font-w700 font-size-h1" href="{{ route('frontend.landing') }}">
                             <span class="text-dark">{{ config('app.name') }}</span>
                         </a>
                         <p class="text-uppercase font-w700 font-size-sm text-muted">Sign In</p>
@@ -19,7 +19,7 @@
                     <!-- For more info and examples you can check out https://github.com/jzaefferer/jquery-validation -->
                     <div class="row no-gutters justify-content-center">
                         <div class="col-sm-8 col-xl-6">
-                            <form  class="js-validation-signin" method="POST" action="{{ route('login') }}">
+                            <form  class="js-validation-signin" method="POST" action="{{ route('frontend.login') }}">
                                 @csrf
                                 <div class="py-3">
                                     <div class="form-group">
@@ -56,7 +56,7 @@
                                                 <i class="fa fa-exclamation-triangle text-muted mr-1"></i> {{ __('Forgot Your Password?') }}
                                             </a>
                                         @endif
-                                        <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('register') }}">
+                                        <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('frontend.register') }}">
                                             <i class="fa fa-plus text-muted mr-1"></i> New Account
                                         </a>
                                     </p>
@@ -67,16 +67,16 @@
                                     </div>
                                     <div class="form-group">
                                         <p class="mt-3 mb-0 d-lg-flex justify-content-lg-between">
-                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('social-media.login','facebook') }}">
+                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('frontend.social-media.login','facebook') }}">
                                                 <i class="fab fa-facebook-square text-muted mr-1"></i>
                                             </a>
-                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('social-media.login','twitter') }}">
+                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('frontend.social-media.login','twitter') }}">
                                                 <i class="fab fa-twitter text-muted mr-1"></i>
                                             </a>
-                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('social-media.login','linkedin') }}">
+                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('frontend.social-media.login','linkedin') }}">
                                                 <i class="fab fa-linkedin text-muted mr-1"></i>
                                             </a>
-                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('social-media.login','google') }}">
+                                            <a class="btn btn-sm btn-light d-block d-lg-inline-block mb-1" href="{{ route('frontend.social-media.login','google') }}">
                                                 <i class="fab fa-google text-muted mr-1"></i>
                                             </a>
                                         </p>
@@ -125,4 +125,4 @@
             });
         </script>
     @endsection
-</x-layouts.simple>
+</x-backend.layouts.simple>
