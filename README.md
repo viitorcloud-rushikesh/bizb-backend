@@ -42,7 +42,7 @@ And navigate to generated server link (http://127.0.0.1:8000)
 App divided into 3 parts Backend, Frontend and API.
 
 
-### Routes Structure
+### Controller Structure
 
 ```
 Controllers structure
