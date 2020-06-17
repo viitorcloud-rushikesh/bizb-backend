@@ -18,7 +18,7 @@
                     <h3 class="block-title">Two-factor authentication</h3>
                 </div>
                 <div class="block-content">
-                    <form action="{{route('admin.pages.authentication-enable')}}" method="get" id="two-way-authentication">
+                    <form action="{{route('backend.pages.authentication-enable')}}" method="get" id="two-way-authentication">
                         <input type="hidden" value="{{$current_authentication_setting}}" name="authentication_status">
                         <input type="hidden" value="{{time()}}" name="current_timestamp">
                         <button type="submit" >@if($current_authentication_setting == 1) Disabled @else Enable @endif</button>

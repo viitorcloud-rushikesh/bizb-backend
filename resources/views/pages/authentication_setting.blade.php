@@ -28,7 +28,7 @@
                 <h4>Enter the six-digit code from the application</h4>
                 <h6>After scanning the barcode image, the app will display a six-digit code that you can enter below</h6>
 
-                <form action="{{route('admin.pages.save-two-way-authentication-details')}}" method="post" id="two-way-authentication">
+                <form action="{{route('backend.pages.save-two-way-authentication-details')}}" method="post" id="two-way-authentication">
                     @csrf
                     <input type="hidden" value="2" name="authentication_status">
                     <input type="text" name="authentication_code" required="required" placeholder="123456">

@@ -40,17 +40,17 @@ class UserController extends Controller
      * @param $verificationCode
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function emailVerification($email,$verificationCode){
-        try{
-
+    public function emailVerification($email,$verificationCode)
+    {
+        try {
             $response = $this->userRepo->emailVerification($email,$verificationCode);
 
-            if($response){
+            if ($response) {
                 return view('pages.thank-you');
-            } else{
+            } else {
                 return view('pages.blank');
             }
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
             return view('pages.blank');
         }
