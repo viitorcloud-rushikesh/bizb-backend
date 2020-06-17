@@ -25,7 +25,7 @@
             <div class="block-content">
                 <ol>
                 @foreach ($tests as $test)
-                    <li><a href="{{ route('admin.test',$test) }}">{{$test}}</a></li>
+                    <li><a href="{{ route('backend.test',$test) }}">{{$test}}</a></li>
                 @endforeach
                 </ol>
             </div>
