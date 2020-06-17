@@ -6,7 +6,10 @@ Route::group(['namespace' => 'Auth'], function () {
     Route::get('login/{provider}/callback', 'SocialAccountController@handleProviderCallback');
 });
 
-Route::get('email-verification/{email}/{verification_code}', 'UserController@emailVerification')->name('frontend.email-verification');
+Route::group(['namespace' => 'User'], function () {
+    Route::get('email-verification/{email}/{verification_code}', 'UserController@emailVerification')->name('frontend.email-verification');
+});
+
 
 /*----------------------------- AUTHENTICATION ROUTES ENDS-----------------------------*/
 

@@ -1,4 +1,4 @@
-<x-layouts.backend>
+<x-backend.layouts.backend>
     <!-- Hero -->
     <div class="bg-body-light">
         <div class="content content-full">
@@ -44,4 +44,4 @@
 {{--{{$as_string}}--}}
 {{--{!! $as_qr_code !!}--}}
     <!-- END Page Content -->
-</x-layouts.backend>
+</x-backend.layouts.backend>
