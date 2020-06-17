@@ -23,18 +23,19 @@ class UserRepository implements UserInterface
      * @param $verificationCode
      * @return bool
      */
-    public function emailVerification($email,$verificationCode){
-        try{
-            $user = $this->model->where('email',$email)->where('confirmation_code',$verificationCode)->first();
+    public function emailVerification($email, $verificationCode)
+    {
+        try {
+            $user = $this->model->where('email', $email)->where('confirmation_code', $verificationCode)->first();
 
-            if($user){
+            if ($user) {
                 $user->email_verified_at = date('Y-m-d H:i:s');
                 $user->save();
                 return true;
             }
 
             return false;
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
             return false;
         }

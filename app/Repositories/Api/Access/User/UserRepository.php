@@ -202,10 +202,10 @@ class UserRepository implements UserInterface
                 $dataRegisterWith['meta_value'] = 'Normal';
 
                 //Adding details to user meta
-                addUserMultipleMetaValue([$dataConfirmationCode,$dataRegister, $dataRegisterOs, $dataRegisterWith]);
+                addUserMultipleMetaValue([$dataConfirmationCode, $dataRegister, $dataRegisterOs, $dataRegisterWith]);
 
                 //event for sending mail of email verification
-                event(new \App\Events\Frontend\Auth\UserConfirmation($user,$otp));
+                event(new \App\Events\Frontend\Auth\UserConfirmation($user, $otp));
 
                 //Creating token for authentication
                 $token = $user->createToken('app-token');

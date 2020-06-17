@@ -189,7 +189,6 @@ class AuthController extends Controller
             $status = $response['status'];
             unset($response['status']);
         } catch (\Exception $ex) {
-            dd($ex);
             $response['message'] = $ex->getMessage();
             $response['success'] = false;
             $status = 403;
