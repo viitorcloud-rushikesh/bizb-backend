@@ -15,15 +15,21 @@ class SendUserConfirmation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * @var
+     */
     protected $user;
+    protected $otp;
 
     /**
      * SendUserConfirmation constructor.
      * @param $user
+     * @param $otp
      */
-    public function __construct($user)
+    public function __construct($user,$otp)
     {
         $this->user = $user;
+        $this->otp = $otp;
     }
 
     /**
@@ -35,7 +41,7 @@ class SendUserConfirmation implements ShouldQueue
     {
         try {
 
-            $email = new UserConfirmEmail($this->user);
+            $email = new UserConfirmEmail($this->user,$this->otp);
 
             Mail::to($this->user['email'])->queue($email);
         } catch (\Exception $ex) {

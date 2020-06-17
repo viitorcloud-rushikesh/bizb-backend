@@ -12,28 +12,29 @@ class UserConfirmEmail extends Mailable
     use Queueable, SerializesModels;
 
     protected $user;
+    protected $otp;
 
     /**
-     * Create a new message instance.
-     *
-     * @return void
+     * UserConfirmEmail constructor.
+     * @param $user
+     * @param $otp
      */
-    public function __construct($user)
+    public function __construct($user,$otp)
     {
         $this->user = $user;
-        $this->subject = 'Email Verification';
+        $this->otp = $otp;
+        $this->subject = 'OTP-Email Verification';
     }
 
     /**
-     * Build the message.
-     *
-     * @return $this
+     * @return UserConfirmEmail
      */
     public function build()
     {
         return $this->view('frontend.mail.account_registration')
             ->with([
-                'user'   => $this->user
+                'user' => $this->user,
+                'otp' => $this->otp,
             ]);
     }
 }

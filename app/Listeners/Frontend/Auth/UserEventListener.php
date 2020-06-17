@@ -21,10 +21,11 @@ class UserEventListener
     public function onNeedsConfirmation($event)
     {
         $user = $event->user;
+        $otp = $event->otp;
         dispatch(new SendUserConfirmation(
-            $user
+            $user,$otp
         ));
-        \Log::info('User Confirmation job dispatched for: '.$user['name']);
+        \Log::info('User Confirmation job dispatched for: ' . $user['name']);
     }
 
     public function subscribe($events)
@@ -38,7 +39,7 @@ class UserEventListener
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param object $event
      * @return void
      */
     public function handle($event)

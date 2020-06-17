@@ -18,12 +18,12 @@ class UserController extends Controller
     private $userRepo;
 
     /**
-     * @author Jaynil Parekh
+     * @param UserRepo $userRepo
      * @since 2020-06-09
      *
      * UserController constructor.
      *
-     * @param UserRepo $userRepo
+     * @author Jaynil Parekh
      */
     public function __construct(UserRepo $userRepo)
     {
@@ -31,26 +31,27 @@ class UserController extends Controller
     }
 
     /**
-     * @author Jaynil Parekh
+     * @param $email
+     * @param $verificationCode
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @since 2020-06-09
      *
      * Email verification
      *
-     * @param $email
-     * @param $verificationCode
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @author Jaynil Parekh
      */
-    public function emailVerification($email,$verificationCode){
-        try{
+    public function emailVerification($email, $verificationCode)
+    {
+        try {
 
-            $response = $this->userRepo->emailVerification($email,$verificationCode);
+            $response = $this->userRepo->emailVerification($email, $verificationCode);
 
-            if($response){
+            if ($response) {
                 return view('pages.thank-you');
-            } else{
+            } else {
                 return view('pages.blank');
             }
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
             return view('pages.blank');
         }

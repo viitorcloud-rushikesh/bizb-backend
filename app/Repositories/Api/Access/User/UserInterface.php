@@ -14,6 +14,10 @@ interface UserInterface
 
     public function createUser(array $data);
 
+    public function confirmOtp(array $data);
+
+    public function resendOtp(array $data);
+
     public function changePassword(array $data);
 
     public function getUserDetail();

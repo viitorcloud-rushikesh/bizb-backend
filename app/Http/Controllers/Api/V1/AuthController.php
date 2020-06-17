@@ -11,12 +11,12 @@ use App\Repositories\Api\Access\User\UserInterface as UserRepo;
 class AuthController extends Controller
 {
     /**
-     * @author Jaynil Parekh
+     * @param UserRepo $userRepo
      * @since 2020-06-09
      *
      * AuthController constructor.
      *
-     * @param UserRepo $userRepo
+     * @author Jaynil Parekh
      */
     public function __construct(UserRepo $userRepo)
     {
@@ -24,112 +24,187 @@ class AuthController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Login User
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function login(Request $request)
     {
-        try{
+        try {
             $validation = Validator::make($request->all(), [
                 'email' => 'required',
                 'password' => 'required',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $status = 400;
+                return response()->json($response, $status);
             }
             $response = $this->userRepo->loginVerification($request->all());
             $status = $response['status'];
             unset($response['status']);
-        } catch (\Exception $ex){
-            $response['message']    = $ex->getMessage();
-            $status                 = 403;
+        } catch (\Exception $ex) {
+            $response['message'] = $ex->getMessage();
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Mpin Login User
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function mPinLogin(Request $request)
     {
-        try{
+        try {
             $validation = Validator::make($request->all(), [
                 'email' => 'required',
-                'mpin'  => 'required|max:4',
+                'mpin' => 'required|max:4',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $status = 400;
+                return response()->json($response, $status);
             }
             $response = $this->userRepo->mPinloginVerification($request->all());
             $status = $response['status'];
             unset($response['status']);
-        } catch (\Exception $ex){
-            $response['message']    = $ex->getMessage();
-            $status                 = 403;
+        } catch (\Exception $ex) {
+            $response['message'] = $ex->getMessage();
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Register User
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function register(Request $request)
     {
         $response = [];
-        try{
+        try {
             $validation = Validator::make($request->all(), [
-                'name'      => 'required|string',
-                'email'     => 'required|email|unique:users',
-                'password'  => 'required|min:8|max:15|confirmed|regex:"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,15}$"',
-                'mobile'    => 'required|min:10|unique:users',
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|min:8|max:15|confirmed|regex:"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,15}$"',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $status = 400;
+                return response()->json($response, $status);
             }
             $response = $this->userRepo->createUser($request->all());
             $status = $response['status'];
             unset($response['status']);
-        } catch (\Exception $ex){
-            $response['message']    = $ex->getMessage();
-            $status                 = 403;
+        } catch (\Exception $ex) {
+            $response['message'] = $ex->getMessage();
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
+    }
+
+    /***
+     * @param Request $request
+     * @return JsonResponse
+     * @author Jaynil Parekh
+     * @since 2020-06-10
+     *
+     * Confirm otp for email verification
+     *
+     */
+    public function confirmOtp(Request $request)
+    {
+
+        $response = [];
+
+        try {
+            $validation = Validator::make($request->all(), [
+                'email' => 'required',
+                'otp' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                $response['message'] = $validation->messages()->first();
+                $response['success'] = false;
+                $status = 400;
+                return response()->json($response, $status);
+            }
+
+            $response = $this->userRepo->confirmOtp($request->all());
+            $status = $response['status'];
+            unset($response['status']);
+        } catch (\Exception $ex) {
+            $response['message'] = $ex->getMessage();
+            $response['success'] = false;
+            $status = 403;
+        }
+        return response()->json($response, $status);
+    }
+
+    /***
+     * @param Request $request
+     * @return JsonResponse
+     * @author Jaynil Parekh
+     * @since 2020-06-17
+     *
+     * Resend otp for email verification
+     *
+     */
+    public function resendOtp(Request $request)
+    {
+
+        $response = [];
+
+        try {
+            $validation = Validator::make($request->all(), [
+                'email' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                $response['message'] = $validation->messages()->first();
+                $response['success'] = false;
+                $status = 400;
+                return response()->json($response, $status);
+            }
+
+            $response = $this->userRepo->resendOtp($request->all());
+            $status = $response['status'];
+            unset($response['status']);
+        } catch (\Exception $ex) {
+            dd($ex);
+            $response['message'] = $ex->getMessage();
+            $response['success'] = false;
+            $status = 403;
+        }
+        return response()->json($response, $status);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Social Login User
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function socialLogin(Request $request)
     {
@@ -137,137 +212,140 @@ class AuthController extends Controller
         try {
 
             $validation = Validator::make($request->all(), [
-                'provider'  => 'required',
-                'id'        => 'required',
-                'email'     => 'required',
-                'name'      => 'required',
+                'provider' => 'required',
+                'id' => 'required',
+                'email' => 'required',
+                'name' => 'required',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $status = 400;
+                return response()->json($response, $status);
             }
             try {
                 $response = $this->userRepo->findOrCreateSocial($request->all());
                 $status = $response['status'];
                 unset($response['status']);
             } catch (\Exception $ex) {
-                $response['message']    = $ex->getMessage();
-                $status                 = 403;
+                $response['message'] = $ex->getMessage();
+                $status = 403;
             }
         } catch (\Exception $ex) {
-            $response['message']    = $ex->getMessage();
-            $status                 = 403;
+            $response['message'] = $ex->getMessage();
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-10
      *
      * Forgot Password Otp generate
      *
-     * @param Request $request
-     * @return JsonResponse
      */
-    public function forgotPassword(Request $request){
+    public function forgotPassword(Request $request)
+    {
 
         $response = [];
 
-        try{
+        try {
             $validation = Validator::make($request->all(), [
                 'email' => 'required',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $status = 400;
+                return response()->json($response, $status);
             }
 
             $response = $this->userRepo->sendOtpForForgotPassword($request->all());
             $status = $response['status'];
             unset($response['status']);
         } catch (\Exception $ex) {
-            $response['message']    = $ex->getMessage();
-            $status                 = 403;
+            $response['message'] = $ex->getMessage();
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-10
      *
      * Forgot Password Otp generate
      *
-     * @param Request $request
-     * @return JsonResponse
      */
-    public function confirmOtpForForgotPassword(Request $request){
+    public function confirmOtpForForgotPassword(Request $request)
+    {
 
         $response = [];
 
-        try{
+        try {
             $validation = Validator::make($request->all(), [
                 'email' => 'required',
-                'otp'   => 'required',
+                'otp' => 'required',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $response['success']    = false;
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $response['success'] = false;
+                $status = 400;
+                return response()->json($response, $status);
             }
 
             $response = $this->userRepo->confirmOtpForForgotPassword($request->all());
             $status = $response['status'];
             unset($response['status']);
         } catch (\Exception $ex) {
-            $response['message']    = $ex->getMessage();
-            $response['success']    = false;
-            $status                 = 403;
+            $response['message'] = $ex->getMessage();
+            $response['success'] = false;
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-10
      *
      * Reset Password
      *
-     * @param Request $request
-     * @return JsonResponse
      */
-    public function resetPassword(Request $request){
+    public function resetPassword(Request $request)
+    {
 
         $response = [];
 
-        try{
+        try {
             $validation = Validator::make($request->all(), [
                 'email' => 'required',
-                'password'  => 'required|min:8|max:15|confirmed|regex:"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,15}$"',
+                'password' => 'required|min:8|max:15|confirmed|regex:"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,15}$"',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $response['success']    = false;
-                $status                 = 400;
-                return response()->json($response,$status);
+                $response['message'] = $validation->messages()->first();
+                $response['success'] = false;
+                $status = 400;
+                return response()->json($response, $status);
             }
 
             $response = $this->userRepo->resetPassword($request->all());
             $status = $response['status'];
             unset($response['status']);
         } catch (\Exception $ex) {
-            $response['message']    = $ex->getMessage();
-            $response['success']    = false;
-            $status                 = 403;
+            $response['message'] = $ex->getMessage();
+            $response['success'] = false;
+            $status = 403;
         }
-        return response()->json($response,$status);
+        return response()->json($response, $status);
     }
 }

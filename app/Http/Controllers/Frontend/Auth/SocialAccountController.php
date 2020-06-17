@@ -10,11 +10,11 @@ use App\SocialMediaHelper\SocialAccountsService;
 class SocialAccountController extends Controller
 {
     /**
+     * @param $provider
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @author Jaynil Parekh
      * @since 2020-06-03
      *
-     * @param $provider
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function redirectToProvider($provider)
     {
@@ -22,14 +22,14 @@ class SocialAccountController extends Controller
     }
 
     /**
-     * @author Jaynil Parekh
+     * @param SocialAccountsService $accountService
+     * @param $provider
+     * @return Response
      * @since 2020-06-03
      *
      * Obtain the user information
      *
-     * @param SocialAccountsService $accountService
-     * @param $provider
-     * @return Response
+     * @author Jaynil Parekh
      */
     public function handleProviderCallback(SocialAccountsService $accountService, $provider)
     {
