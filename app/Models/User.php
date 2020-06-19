@@ -32,7 +32,8 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia, TwoFact
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'mobile', 'password','confirmation_code'];
+    protected $fillable = ['name', 'email', 'mobile', 'password', 'confirmation_code', 'avatar',
+        'verification_confirmed', 'status', 'type', 'subscription_plan', 'is_profile_verified',];
 
     protected $guarded = [
         'id',
@@ -132,10 +133,58 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia, TwoFact
         return !$this->hasRole('superadmin');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function accounts(){
-        return $this->hasMany('App\Models\LinkedSocialAccount');
+    public function userMetas()
+    {
+        return $this->hasMany(\App\Models\UserMeta::class);
+    }
+
+    public function userDeviceTokens()
+    {
+        return $this->hasMany(\App\Models\UserDeviceToken::class);
+    }
+
+    public function userSocialLogins()
+    {
+        return $this->hasMany(\App\Models\UserSocialLogin::class);
+    }
+
+    public function userFreelancers()
+    {
+        return $this->hasMany(\App\Models\UserFreelancer::class);
+    }
+
+    public function userWorkHistories()
+    {
+        return $this->hasMany(\App\Models\UserWorkHistory::class);
+    }
+
+    public function userBrands()
+    {
+        return $this->hasMany(\App\Models\UserBrand::class);
+    }
+
+    public function userSocialMediaLinks()
+    {
+        return $this->hasMany(\App\Models\UserSocialMediaLink::class);
+    }
+
+    public function userProfileVerifications()
+    {
+        return $this->hasMany(\App\Models\UserProfileVerification::class);
+    }
+
+    public function userJobs()
+    {
+        return $this->hasMany(\App\Models\UserJob::class);
+    }
+
+    public function userSavedJobs()
+    {
+        return $this->hasMany(\App\Models\UserSavedJob::class);
+    }
+
+    public function userAppliedJobs()
+    {
+        return $this->hasMany(\App\Models\UserAppliedJob::class);
     }
 }

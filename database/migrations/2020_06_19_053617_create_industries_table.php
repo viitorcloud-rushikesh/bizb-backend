@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserMetasTable extends Migration
+class CreateIndustriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateUserMetasTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_metas', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->string('meta_key')->nullable();
-            $table->string('meta_value')->nullable();
+        Schema::create('industries', function (Blueprint $table) {
+            $table->id();
+            $table->string('en_industry_name', 100);
+            $table->string('slug', 100);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateUserMetasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_metas');
+        Schema::dropIfExists('industries');
     }
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserMeta extends Model
+class UserWorkHistory extends Model
 {
     use SoftDeletes;
 
@@ -16,8 +16,15 @@ class UserMeta extends Model
      */
     protected $fillable = [
         'user_id',
-        'meta_key',
-        'meta_value',
+        'job_title',
+        'company_name',
+        'location',
+        'latitude',
+        'longitude',
+        'start_date',
+        'end_date',
+        'currently_working',
+        'description',
     ];
 
     /**
@@ -28,6 +35,19 @@ class UserMeta extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
+        'currently_working' => 'integer',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'start_date',
+        'end_date',
     ];
 
 

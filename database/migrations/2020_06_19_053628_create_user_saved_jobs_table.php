@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLinkedSocialAccountsTable extends Migration
+class CreateUserSavedJobsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateLinkedSocialAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('linked_social_accounts', function (Blueprint $table) {
-
-            $table->increments('id');
-            $table->bigInteger('user_id');
-            $table->string('provider_name')->nullable();
-            $table->string('provider_id')->unique()->nullable();
+        Schema::create('user_saved_jobs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_job_id')->constrained()->cascadeOnDelete();
+            $table->softDeletes();
             $table->timestamps();
-
         });
     }
 
@@ -31,6 +29,6 @@ class CreateLinkedSocialAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('linked_social_accounts');
+        Schema::dropIfExists('user_saved_jobs');
     }
 }

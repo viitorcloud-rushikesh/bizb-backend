@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserMeta extends Model
+class Industry extends Model
 {
     use SoftDeletes;
 
@@ -15,9 +15,8 @@ class UserMeta extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
-        'meta_key',
-        'meta_value',
+        'en_industry_name',
+        'slug',
     ];
 
     /**
@@ -27,12 +26,5 @@ class UserMeta extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
     ];
-
-
-    public function user()
-    {
-        return $this->belongsTo(\App\Models\User::class);
-    }
 }
