@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\Frontend\User\UserConfirmEmail;
+use App\Mail\Frontend\User\SendUserWelcomeEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendUserConfirmation implements ShouldQueue
+class SendUserWelcome implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -19,17 +19,15 @@ class SendUserConfirmation implements ShouldQueue
      * @var
      */
     protected $user;
-    protected $otp;
 
     /**
-     * SendUserConfirmation constructor.
-     * @param $user
-     * @param $otp
+     * Create a new job instance.
+     *
+     * @return void
      */
-    public function __construct($user,$otp)
+    public function __construct($user)
     {
         $this->user = $user;
-        $this->otp = $otp;
     }
 
     /**
@@ -41,7 +39,7 @@ class SendUserConfirmation implements ShouldQueue
     {
         try {
 
-            $email = new UserConfirmEmail($this->user,$this->otp);
+            $email = new SendUserWelcomeEmail($this->user,$this->otp);
 
             Mail::to($this->user['email'])->queue($email);
         } catch (\Exception $ex) {

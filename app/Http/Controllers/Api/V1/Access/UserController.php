@@ -120,4 +120,41 @@ class UserController extends Controller
         }
         return response()->json($response, $status);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @author Jaynil Parekh
+     * @since 2020-06-09
+     *
+     * Change Four digit pin.
+     *
+     */
+    public function changeMpin(Request $request)
+    {
+        $response = [];
+
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'email' => 'required',
+                'old_mpin' => 'required|max:4',
+                'mpin' => 'required|max:4',
+            ]);
+
+            if ($validation->fails()) {
+                $response['message'] = $validation->messages()->first();
+                $status = 400;
+                return response()->json($response, $status);
+            }
+
+            $response = $this->userRepo->changeMpin($request->all());
+            $status = $response['status'];
+            unset($response['status']);
+        } catch (\Exception $ex) {
+            Log::error($ex);
+            $status = 403;
+        }
+        return response()->json($response, $status);
+    }
 }

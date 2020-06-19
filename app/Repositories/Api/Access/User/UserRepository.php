@@ -98,16 +98,16 @@ class UserRepository implements UserInterface
                     $response['status'] = 200;
 
                 } else {
-                    $response['message'] = 'You email is not verified!';
+                    $response['message'] = trans('auth.email_not_verified');
                     $response['status'] = 401;
                 }
             } else {
-                $response['message'] = 'Your email or password might be wrong!';
+                $response['message'] = trans('auth.failed');
                 $response['status'] = 401;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something-went_wrong');
             $response['status'] = 401;
         }
         return $response;
@@ -148,16 +148,47 @@ class UserRepository implements UserInterface
                     $response['status'] = 200;
 
                 } else {
-                    $response['message'] = 'Mpin is not valid';
+                    $response['message'] = trans('auth.mpin.mpin_not_valid');
                     $response['status'] = 401;
                 }
             } else {
-                $response['message'] = 'Mpin is not valid';
+                $response['message'] = trans('auth.mpin_not_valid');
                 $response['status'] = 401;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
+            $response['status'] = 401;
+        }
+        return $response;
+    }
+
+    /**
+     * @return array
+     * @since 2020-06-08
+     *
+     * Logout User.
+     *
+     * @author Jaynil Parekh
+     * @since 2020-06-11
+     */
+    public function logoutUser()
+    {
+        $response = [];
+
+        try {
+
+            $user = loggedInUser();
+
+            if (!empty($user)) {
+                $user->tokens()->delete();
+                $response['message'] = trans('auth.logout_success');
+                $response['status'] = 200;
+            }
+
+        } catch (\Exception $ex) {
+            Log::error($ex);
+            $response['message'] = trans('auth.something_went_wrong');
             $response['status'] = 401;
         }
         return $response;
@@ -217,15 +248,15 @@ class UserRepository implements UserInterface
 
                 $responseData['token'] = $token->plainTextToken;
                 $responseData['user'] = $userDetail;
-                $responseData['message'] = 'Registered successfully!';
+                $responseData['message'] = trans('auth.registration_success');
                 $responseData['status'] = 200;
             } else {
-                $responseData['message'] = 'Something went wrong!';
+                $responseData['message'] = trans('auth.something_went_wrong');
                 $responseData['status'] = 403;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
-            $responseData['message'] = 'Something went wrong!';
+            $responseData['message'] = trans('auth.something_went_wrong');
             $responseData['status'] = 403;
         }
 
@@ -258,19 +289,19 @@ class UserRepository implements UserInterface
                 $user->save();
 
                 removeUserMetaValue($user->id, 'confirmation_code');
-
+                event(new \App\Events\Frontend\Auth\UserWelcome($user));
                 $response['status'] = 200;
-                $response['message'] = 'OTP verification successful!';
+                $response['message'] = trans('auth.otp.verification_success');
                 $response['success'] = true;
             } else {
                 $response['status'] = 401;
-                $response['message'] = 'Invalid OTP!';
+                $response['message'] = trans('auth.otp.invalid');
                 $response['success'] = false;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
             $response['success'] = false;
         }
         return $response;
@@ -301,13 +332,13 @@ class UserRepository implements UserInterface
             updateUserMetaValue($user->id, 'confirmation_code', bcrypt($otp));
 
             $response['status'] = 200;
-            $response['message'] = 'OTP sent successfully!';
+            $response['message'] = trans('auth.otp.sent_success');
             $response['success'] = true;
 
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
             $response['success'] = false;
         }
         return $response;
@@ -401,16 +432,16 @@ class UserRepository implements UserInterface
 
                 $responseData['token'] = $token->plainTextToken;
                 $responseData['user'] = $userData;
-                $responseData['message'] = 'Login from ' . $provider . ' sucessfully!';
+                $responseData['message'] = trans('auth.social_media.login_success', ['provider' => $provider]);
                 $responseData['status'] = 200;
 
             } else {
-                $responseData['message'] = 'Social media login is not allowed!';
+                $responseData['message'] = trans('auth.social_media.not_allowed');
                 $responseData['status'] = 403;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
-            $responseData['message'] = 'Something went wrong!';
+            $responseData['message'] = trans('auth.something_went_wrong');
             $responseData['status'] = 403;
         }
         return $responseData;
@@ -447,7 +478,7 @@ class UserRepository implements UserInterface
             }
         } catch (\Exception $ex) {
             Log::error($ex);
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
             $response['status'] = 403;
         }
 
@@ -477,22 +508,22 @@ class UserRepository implements UserInterface
             //Checking current password if password is not valid will return error message else if reset with new password
             if (isset($currentPassword) && $currentPassword != '' && !Hash::check($data['current_password'], $user->password)) {
                 $response['status'] = 401;
-                $response['message'] = 'Current password does not matched!';
+                $response['message'] = trans('auth.change_password.current_pwd_not_matched');
             } elseif (isset($data['password'])) {
                 $user->password = bcrypt($data['password']);
 
                 if ($user->save()) {
                     $response['status'] = 200;
-                    $response['message'] = 'Password updated successfully';
+                    $response['message'] = trans('auth.change_password.update_success');
                 }
             } else {
                 $response['status'] = 403;
-                $response['message'] = 'Something went wrong!';
+                $response['message'] = trans('auth.something_went_wrong');
             }
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
         }
         return $response;
     }
@@ -521,17 +552,63 @@ class UserRepository implements UserInterface
                 addUserSingleMetaValue($user->id, 'mpin', bcrypt($data['mpin']));
 
                 $response['status'] = 200;
-                $response['message'] = 'Mpin generated successfully!';
+                $response['message'] = trans('auth.mpin.mpin_generate_success');
             } else {
                 $response['status'] = 400;
-                $response['message'] = 'Something went wrong!';
+                $response['message'] = trans('auth.something_went_wrong');
             }
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
         }
 
+        return $response;
+    }
+
+    /**
+     *
+     * @param array $data
+     * @return array
+     * @author Jaynil Parekh
+     * @since 2020-06-08
+     *
+     * Change four digit password.
+     *
+     */
+    public function changeMpin(array $data)
+    {
+        $response = [];
+
+        try {
+            $user = $this->findByEmail($data['email']);
+
+            //Check user available or not
+            if ($user) {
+
+                $mPin = getUserMetaValue($user->id, 'mpin');
+
+                //Check old mpin
+                if (!empty($mPin) && Hash::check($data['old_mpin'], $mPin)) {
+
+                    //Update new mpin
+                    updateUserMetaValue($user->id, 'mpin', bcrypt($data['mpin']));
+
+                    $response['status'] = 200;
+                    $response['message'] = trans('auth.mpin.mpin_update_success');
+                } else {
+                    $response['status'] = 401;
+                    $response['message'] = trans('auth.mpin.old_mpin_wrong');
+                }
+            } else {
+                $response['status'] = 400;
+                $response['message'] = trans('auth.something_went_wrong');
+            }
+        } catch (\Exception $ex) {
+            Log::error($ex);
+            $response['status'] = 403;
+            $response['message'] = trans('auth.something_went_wrong');
+        }
         return $response;
     }
 
@@ -574,17 +651,17 @@ class UserRepository implements UserInterface
                     addUserSingleMetaValue($user->id, 'forgot_password_otp', bcrypt($otp));
                 }
                 $response['status'] = 200;
-                $response['message'] = 'OTP Sent successfully to your mail!';
+                $response['message'] = trans('auth.forgot_password.opt_sent_to_email');
                 $response['success'] = true;
             } else {
                 $response['status'] = 400;
-                $response['message'] = 'Something went wrong!';
+                $response['message'] = trans('auth.something_went_wrong');
                 $response['success'] = false;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
             $response['success'] = false;
         }
 
@@ -615,17 +692,17 @@ class UserRepository implements UserInterface
                 removeUserMetaValue($user->id, 'forgot_password_otp');
 
                 $response['status'] = 200;
-                $response['message'] = 'OTP verification successful!';
+                $response['message'] = trans('auth.forgot_password.otp_verification_successful');
                 $response['success'] = true;
             } else {
                 $response['status'] = 401;
-                $response['message'] = 'Invalid OTP!';
+                $response['message'] = trans('auth.forgot_password.invalid_otp');
                 $response['success'] = false;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
             $response['success'] = false;
         }
         return $response;
@@ -654,22 +731,22 @@ class UserRepository implements UserInterface
 
                 if ($user->save()) {
                     $response['status'] = 200;
-                    $response['message'] = 'Password reset successfully!';
+                    $response['message'] = trans('auth.forgot_password.reset_password_successful');
                     $response['success'] = true;
                 } else {
                     $response['status'] = 200;
-                    $response['message'] = 'Reset Password Failed!';
+                    $response['message'] = trans('auth.forgot_password.reset_password_failed');
                     $response['success'] = false;
                 }
             } else {
                 $response['status'] = 401;
-                $response['message'] = 'Reset Password Failed!';
+                $response['message'] = trans('auth.forgot_password.reset_password_failed');
                 $response['success'] = false;
             }
         } catch (\Exception $ex) {
             Log::error($ex);
             $response['status'] = 403;
-            $response['message'] = 'Something went wrong!';
+            $response['message'] = trans('auth.something_went_wrong');
             $response['success'] = false;
         }
         return $response;
