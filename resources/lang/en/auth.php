@@ -42,7 +42,7 @@ return [
 
     'change_password'   =>  [
         'current_pwd_not_matched'   => 'Current password does not matched!',
-        'update_success'            => 'Current password does not matched!',
+        'update_success'            => 'Password changed successfully!',
     ],
 
     'forgot_password'   =>  [

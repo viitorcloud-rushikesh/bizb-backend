@@ -32,7 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia, TwoFact
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'mobile', 'password', 'confirmation_code', 'avatar',
+    protected $fillable = ['name', 'email', 'username', 'mobile', 'password', 'confirmation_code', 'avatar',
         'verification_confirmed', 'status', 'type', 'subscription_plan', 'is_profile_verified',];
 
     protected $guarded = [

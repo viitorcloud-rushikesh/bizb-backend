@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\APIController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Api\Access\User\UserInterface as UserRepo;
 
-class AuthController extends Controller
+class AuthController extends APIController
 {
     /**
      * @param UserRepo $userRepo
@@ -41,18 +41,16 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
             $response = $this->userRepo->loginVerification($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -73,18 +71,16 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
             $response = $this->userRepo->mPinloginVerification($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -107,18 +103,16 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
             $response = $this->userRepo->createUser($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /***
@@ -142,21 +136,17 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $response['success'] = false;
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
-
             $response = $this->userRepo->confirmOtp($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
             $response['success'] = false;
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /***
@@ -179,21 +169,17 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $response['success'] = false;
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
-
             $response = $this->userRepo->resendOtp($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
             $response['success'] = false;
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -218,23 +204,21 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
             try {
                 $response = $this->userRepo->findOrCreateSocial($request->all());
-                $status = $response['status'];
+                $this->setStatusCode($response['status']);
                 unset($response['status']);
             } catch (\Exception $ex) {
                 $response['message'] = $ex->getMessage();
-                $status = 403;
+                $this->setStatusCode(403);
             }
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -257,19 +241,16 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
-
             $response = $this->userRepo->sendOtpForForgotPassword($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -293,21 +274,17 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $response['success'] = false;
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
-
             $response = $this->userRepo->confirmOtpForForgotPassword($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
             $response['success'] = false;
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -331,20 +308,16 @@ class AuthController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $response['success'] = false;
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
-
             $response = $this->userRepo->resetPassword($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
             $response['success'] = false;
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 }

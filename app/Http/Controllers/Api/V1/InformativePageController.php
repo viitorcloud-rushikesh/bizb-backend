@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\APIController;
 use Illuminate\Support\Facades\Lang;
 
-class InformativePageController extends Controller
+class InformativePageController extends APIController
 {
 
     /**
@@ -22,26 +22,25 @@ class InformativePageController extends Controller
     {
         try {
             $response['page_detail'] = trans('informative-page.' . $page);
-            $response['status'] = 200;
-            $response['success'] = true;
+            $this->setStatusCode(200);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $response['status'] = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response);
+        return $this->respond($response);
     }
 
     public function getLabels()
     {
         try {
             $response['labels'] = Lang::get('mobile');
-            $response['status'] = 200;
             $response['success'] = true;
+            $this->setStatusCode(200);
         } catch (\Exception $ex) {
             $response['message'] = $ex->getMessage();
-            $response['status'] = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response);
+        return $this->respond($response);
     }
 
 }

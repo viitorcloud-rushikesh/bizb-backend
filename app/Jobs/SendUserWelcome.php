@@ -39,7 +39,7 @@ class SendUserWelcome implements ShouldQueue
     {
         try {
 
-            $email = new SendUserWelcomeEmail($this->user,$this->otp);
+            $email = new SendUserWelcomeEmail($this->user);
 
             Mail::to($this->user['email'])->queue($email);
         } catch (\Exception $ex) {

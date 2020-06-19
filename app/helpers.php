@@ -91,7 +91,6 @@ if (!function_exists('addUserSingleMetaValue')) {
             if (UserMeta::create($data)) {
                 return true;
             }
-
             return false;
         } else {
             return false;
@@ -118,7 +117,6 @@ if (!function_exists('addUserMultipleMetaValue')) {
             if (UserMeta::insert($data)) {
                 return true;
             }
-
             return false;
         } else {
             return false;
@@ -143,7 +141,6 @@ if (!function_exists('updateUserMetaValue')) {
     {
         if (!empty($userId) && !empty($key) && !empty($value)) {
             UserMeta::where('user_id', $userId)->where('meta_key', $key)->update(['meta_value' => $value]);
-
             return true;
         }
     }
@@ -166,7 +163,6 @@ if (!function_exists('removeUserMetaValue')) {
     {
         if (!empty($userId) && !empty($key)) {
             UserMeta::where('user_id', $userId)->where('meta_key', $key)->delete();
-
             return true;
         }
     }
@@ -186,7 +182,6 @@ if (!function_exists('generateConfirmationCode')) {
     function generateConfirmationCode($length = 6)
     {
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
         return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
     }
 }
@@ -205,7 +200,28 @@ if (!function_exists('generateOtp')) {
     function generateOtp($length = 6)
     {
         $pool = '0123456789';
-
         return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
+    }
+}
+
+if (!function_exists('generateUsername')) {
+
+    /**
+     * @param $string
+     * @return string
+     * @author Jaynil Parekh
+     * @since 2020-06-19
+     *
+     * Generate username
+     *
+     */
+    function generateUsername($string)
+    {
+        $pattern = " ";
+        $firstPart = substr(strstr(strtolower($string), $pattern, true), 0, 2);
+        $secondPart = substr(strstr(strtolower($string), $pattern, false), 0, 3);
+        $nrRand = rand(0, 100);
+
+        return trim($firstPart) . trim($secondPart) . trim($nrRand);
     }
 }

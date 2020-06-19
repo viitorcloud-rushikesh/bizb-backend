@@ -23,7 +23,7 @@ class SendForgotPasswordOtpEmail extends Mailable
     {
         $this->user = $user;
         $this->otp = $otp;
-        $this->subject = trans('email.subject.forget_password_otp');
+        $this->subject = trans('email.email_subject_label.forget_password_otp');
     }
 
     /**

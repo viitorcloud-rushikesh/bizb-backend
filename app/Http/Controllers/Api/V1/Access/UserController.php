@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1\Access;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\APIController;
 use App\Repositories\Api\Access\User\UserInterface as UserRepo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class UserController extends APIController
 {
 
     /**
@@ -40,13 +40,13 @@ class UserController extends Controller
 
         try {
             $response = $this->userRepo->getUserDetail();
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -70,19 +70,17 @@ class UserController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
 
             $response = $this->userRepo->changePassword($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -106,19 +104,16 @@ class UserController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
-
             $response = $this->userRepo->setMpin($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 
     /**
@@ -140,21 +135,20 @@ class UserController extends Controller
                 'email' => 'required',
                 'old_mpin' => 'required|max:4',
                 'mpin' => 'required|max:4',
+                'confirm_mpin' => 'required|max:4|same:mpin',
             ]);
 
             if ($validation->fails()) {
-                $response['message'] = $validation->messages()->first();
-                $status = 400;
-                return response()->json($response, $status);
+                return $this->throwValidation($validation->messages()->first());
             }
 
             $response = $this->userRepo->changeMpin($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
         } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response, $status);
+        return $this->respond($response);
     }
 }

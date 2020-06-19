@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Access\User;
 
 use App\Jobs\SendForgotPasswordOtp;
 use App\Models\User;
-use App\Models\LinkedSocialAccount;
+use App\Models\UserSocialLogin;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
@@ -17,22 +17,24 @@ class UserRepository implements UserInterface
      * @author Jaynil Parekh
      * @since 2020-06-08
      * @var User
+     *
      */
     protected $model;
+    protected $userSocialLogin;
 
     /**
      * @param User $model
-     * @param LinkedSocialAccount $linkedSocialAccount
+     * @param UserSocialLogin $userSocialLogin
      * @author Jaynil Parekh
      * @since 2020-06-08
      *
      * UserRepository constructor.
      *
      */
-    public function __construct(User $model, LinkedSocialAccount $linkedSocialAccount)
+    public function __construct(User $model, UserSocialLogin $userSocialLogin)
     {
         $this->model = $model;
-        $this->linkedSocialAccount = $linkedSocialAccount;
+        $this->userSocialLogin = $userSocialLogin;
     }
 
     /**
@@ -83,8 +85,7 @@ class UserRepository implements UserInterface
 
             if (!empty($user) && Hash::check($data['password'], $user->password)) {
 
-//                if ($user->verification_confirmed != 1) {
-                if (!empty($user->email_verified_at)) {
+                if ($user->verification_confirmed != 1) {
 
                     $token = $user->createToken('app-token');
 
@@ -95,7 +96,6 @@ class UserRepository implements UserInterface
 
                     $response['token'] = $token->plainTextToken;
                     $response['user'] = $userData;
-                    $response['status'] = 200;
 
                 } else {
                     $response['message'] = trans('auth.email_not_verified');
@@ -152,7 +152,7 @@ class UserRepository implements UserInterface
                     $response['status'] = 401;
                 }
             } else {
-                $response['message'] = trans('auth.mpin_not_valid');
+                $response['message'] = trans('auth.mpin.mpin_not_valid');
                 $response['status'] = 401;
             }
         } catch (\Exception $ex) {
@@ -210,7 +210,7 @@ class UserRepository implements UserInterface
             $userData['name'] = $data['name'] ?? null;
             $userData['mobile'] = $data['mobile'] ?? null;
             $userData['password'] = bcrypt($data['password']) ?? null;
-            $userData['confirmation_code'] = generateConfirmationCode();
+            $userData['username'] = generateUsername($data['name']);
 
             if ($user = $this->model->create($userData)) {
                 $user->assignRole('user');
@@ -284,12 +284,14 @@ class UserRepository implements UserInterface
 
             if ($user && !empty($originalOtp) && Hash::check($data['otp'], $originalOtp)) {
 
-                //$user->verification_confirmed = 2; This one is for new project
-                $user->email_verified_at = Carbon::now(); //This one is as per old system
+                $user->verification_confirmed = 2;
                 $user->save();
 
-                removeUserMetaValue($user->id, 'confirmation_code');
-                event(new \App\Events\Frontend\Auth\UserWelcome($user));
+                removeUserMetaValue($user->id, 'confirmation_code');//Remove confirmation code
+                addUserSingleMetaValue($user->id,'confirmed_at',Carbon::now()->format('Y-m-d H:i:s'));//Adding confirmation time&date
+
+                event(new \App\Events\Frontend\Auth\UserWelcome($user));//Sending welcome mail after confirmation
+
                 $response['status'] = 200;
                 $response['message'] = trans('auth.otp.verification_success');
                 $response['success'] = true;
@@ -329,6 +331,7 @@ class UserRepository implements UserInterface
             //event for sending mail of email verification
             event(new \App\Events\Frontend\Auth\UserConfirmation($user, $otp));
 
+            //Update confirmation code with new generated code
             updateUserMetaValue($user->id, 'confirmation_code', bcrypt($otp));
 
             $response['status'] = 200;
@@ -370,10 +373,11 @@ class UserRepository implements UserInterface
                 $user_email = $data['email'] ?: "{$data['id']}@{$provider}.com";
 
                 // Check to see if there is a user with this email first.
-                $account = $this->linkedSocialAccount->where('provider_name', $provider)
+                $account = $this->userSocialLogin->where('provider', $provider)
                     ->where('provider_id', $data['id'])
                     ->first();
 
+                //If already added in our system it will return values
                 if ($account) {
                     $user = $account->user;
 
@@ -383,7 +387,8 @@ class UserRepository implements UserInterface
                     $userData['name'] = $user->name;
                     $userData['email'] = $user->email;
                     $userData['mobile'] = $user->mobile;
-                } else {
+                    $userData['username'] = $user->username;
+                } else { // Insert as new user
                     $user = $this->findByEmail($data['email']);
 
                     //Checking email is registered or not if not then save it
@@ -391,6 +396,7 @@ class UserRepository implements UserInterface
                         $user = $this->model->create([
                             'email' => $user_email,
                             'name' => $data['name'],
+                            'username' => generateUsername($data['name']),
                             'email_verified_at' => date('Y-m-d H:i:s'),
                         ])->assignRole('user');
 
@@ -411,9 +417,9 @@ class UserRepository implements UserInterface
                     }
 
                     //Store social media account id and provider
-                    $user->accounts()->create([
+                    $user->userSocialLogins()->create([
                         'provider_id' => $data['id'],
-                        'provider_name' => $provider,
+                        'provider' => $provider,
                     ]);
 
                     //deleting previous generated tokens
@@ -428,6 +434,7 @@ class UserRepository implements UserInterface
                     $userData['name'] = $user->name;
                     $userData['email'] = $user->email;
                     $userData['mobile'] = $user->mobile;
+                    $userData['username'] = $user->username;
                 }
 
                 $responseData['token'] = $token->plainTextToken;
