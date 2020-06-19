@@ -1,2 +1,78 @@
+created:
+    - database/migrations/2020_06_19_053615_create_skills_table.php
+    - database/migrations/2020_06_19_053616_create_expertises_table.php
+    - database/migrations/2020_06_19_053617_create_industries_table.php
+    - database/migrations/2020_06_19_053618_create_users_table.php
+    - database/migrations/2020_06_19_053619_create_user_metas_table.php
+    - database/migrations/2020_06_19_053620_create_user_device_tokens_table.php
+    - database/migrations/2020_06_19_053621_create_user_social_logins_table.php
+    - database/migrations/2020_06_19_053622_create_user_freelancers_table.php
+    - database/migrations/2020_06_19_053623_create_user_work_histories_table.php
+    - database/migrations/2020_06_19_053624_create_user_brands_table.php
+    - database/migrations/2020_06_19_053625_create_user_jobs_table.php
+    - database/migrations/2020_06_19_053626_create_user_social_media_links_table.php
+    - database/migrations/2020_06_19_053627_create_user_profile_verifications_table.php
+    - database/migrations/2020_06_19_053628_create_user_saved_jobs_table.php
+    - database/migrations/2020_06_19_053629_create_user_applied_jobs_table.php
+    - app/Models/Skill.php
+    - app/Models/Expertise.php
+    - app/Models/Industry.php
+    - app/Models/User.php
+    - app/Models/UserMeta.php
+    - app/Models/UserDeviceToken.php
+    - app/Models/UserSocialLogin.php
+    - app/Models/UserFreelancer.php
+    - app/Models/UserWorkHistory.php
+    - app/Models/UserBrand.php
+    - app/Models/UserJob.php
+    - app/Models/UserSocialMediaLink.php
+    - app/Models/UserProfileVerification.php
+    - app/Models/UserSavedJob.php
+    - app/Models/UserAppliedJob.php
+    - database/factories/SkillFactory.php
+    - database/factories/ExpertiseFactory.php
+    - database/factories/IndustryFactory.php
+    - database/factories/UserFactory.php
+    - database/factories/UserMetaFactory.php
+    - database/factories/UserDeviceTokenFactory.php
+    - database/factories/UserSocialLoginFactory.php
+    - database/factories/UserFreelancerFactory.php
+    - database/factories/UserWorkHistoryFactory.php
+    - database/factories/UserBrandFactory.php
+    - database/factories/UserJobFactory.php
+    - database/factories/UserSocialMediaLinkFactory.php
+    - database/factories/UserProfileVerificationFactory.php
+    - database/factories/UserSavedJobFactory.php
+    - database/factories/UserAppliedJobFactory.php
+    - app/Nova/Skill.php
+    - app/Nova/Expertise.php
+    - app/Nova/Industry.php
+    - app/Nova/User.php
+    - app/Nova/UserMeta.php
+    - app/Nova/UserDeviceToken.php
+    - app/Nova/UserSocialLogin.php
+    - app/Nova/UserFreelancer.php
+    - app/Nova/UserWorkHistory.php
+    - app/Nova/UserBrand.php
+    - app/Nova/UserJob.php
+    - app/Nova/UserSocialMediaLink.php
+    - app/Nova/UserProfileVerification.php
+    - app/Nova/UserSavedJob.php
+    - app/Nova/UserAppliedJob.php
 models:
     Models\User: { name: string, email: string, username: string, mobile: 'string nullable', email_verified_at: 'datetime nullable', mobile_verified_at: 'datetime nullable', password: string, timezone: 'string nullable', last_login_at: 'datetime nullable', last_login_ip: 'string nullable', remember_token: 'string:100 nullable', extra_attributes: 'json nullable', created_by: 'biginteger unsigned nullable', updated_by: 'biginteger unsigned nullable', deleted_by: 'biginteger unsigned nullable' }
+    Skill: { id: id, en_skill_name: 'string:100', slug: 'string:100', timestamps: timestamps, softdeletes: softDeletes }
+    Expertise: { id: id, en_expertise_name: 'string:100', slug: 'string:100', timestamps: timestamps, softdeletes: softDeletes }
+    Industry: { id: id, en_industry_name: 'string:100', slug: 'string:100', timestamps: timestamps, softdeletes: softDeletes }
+    User: { id: id, name: 'string:70', email: 'string:100 unique', username: 'nullable string:16 unique', password: 'nullable string:255', avatar: 'nullable string:35', verification_confirmed: 'unsignedTinyInteger default:1', status: 'unsignedTinyInteger default:1', type: unsignedTinyInteger, subscription_plan: 'nullable unsignedTinyInteger', is_profile_verified: 'unsignedTinyInteger default:1', last_login_at: 'nullable timestamp', timestamps: timestamps, softdeletes: softDeletes, relationships: { hasMany: 'UserMeta, UserDeviceToken, UserSocialLogin, UserFreelancer, UserWorkHistory, UserBrand, UserSocialMediaLink, UserProfileVerification, UserJob, UserSavedJob, UserAppliedJob' } }
+    UserMeta: { id: id, user_id: 'id foreign', meta_key: 'string:30', meta_value: 'nullable string:100', timestamps: timestamps, softdeletes: softDeletes }
+    UserDeviceToken: { id: id, user_id: 'id foreign', os: unsignedTinyInteger, device_id: 'string:70', token: 'string:255', timestamps: timestamps, softdeletes: softDeletes }
+    UserSocialLogin: { id: id, user_id: 'id foreign', provider: unsignedTinyInteger, provider_id: 'string:100', avatar: 'nullable string:35', timestamps: timestamps, softdeletes: softDeletes }
+    UserFreelancer: { id: id, user_id: 'id foreign', role: 'nullable string:100', location: 'nullable string:150', latitude: 'nullable decimal:10,8', longitude: 'nullable decimal:11,8', bio: 'nullable string:600', skills: 'nullable json', expertise_id: 'id foreign', rate_currency: 'nullable unsignedTinyInteger', rate: 'nullable decimal:10,2', rate_type: 'nullable unsignedTinyInteger', timestamps: timestamps, softdeletes: softDeletes }
+    UserWorkHistory: { id: id, user_id: 'id foreign', job_title: 'nullable string:100', company_name: 'nullable string:100', location: 'nullable string:150', latitude: 'nullable decimal:10,8', longitude: 'nullable decimal:11,8', start_date: 'nullable timestamp', end_date: 'nullable timestamp', currently_working: 'nullable unsignedTinyInteger', description: 'nullable string:600', timestamps: timestamps, softdeletes: softDeletes }
+    UserBrand: { id: id, user_id: 'id foreign', brand_name: 'nullable string:100', location: 'nullable string:150', latitude: 'nullable decimal:10,8', longitude: 'nullable decimal:11,8', website: 'nullable string:200', email: 'nullable string:100', overview: 'nullable string:600', industry_id: 'nullable id foreign', timestamps: timestamps, softdeletes: softDeletes }
+    UserJob: { id: id, user_id: 'id foreign', title: 'nullable string:100', description: 'nullable string:600', skills: 'nullable json', experience_level: 'nullable json', job_type: 'nullable unsignedTinyInteger', payment_type: 'nullable unsignedTinyInteger', rate_currency: 'nullable unsignedTinyInteger', rate: 'nullable decimal:10,2', rate_type: 'nullable unsignedTinyInteger', work_type: 'nullable unsignedTinyInteger', job_validity_date: 'nullable timestamp', job_expired_date: 'nullable timestamp', status: 'nullable unsignedTinyInteger', timestamps: timestamps, softdeletes: softDeletes }
+    UserSocialMediaLink: { id: id, user_id: 'id foreign', website: 'nullable string:200', instagram: 'nullable string:200', dribbble: 'nullable string:200', behance: 'nullable string:200', medium: 'nullable string:200', other: 'nullable json', is_for_user: 'nullable unsignedTinyInteger', timestamps: timestamps, softdeletes: softDeletes }
+    UserProfileVerification: { id: id, user_id: 'id foreign', profile_verification_status: 'nullable unsignedTinyInteger', requested_at: 'nullable timestamp', responded_at: 'nullable timestamp', message: 'nullable string:200', timestamps: timestamps, softdeletes: softDeletes }
+    UserSavedJob: { id: id, user_id: 'id foreign', user_job_id: 'id foreign', timestamps: timestamps, softdeletes: softDeletes }
+    UserAppliedJob: { id: id, user_id: 'id foreign', user_job_id: 'id foreign', description: 'nullable string:600', timestamps: timestamps, softdeletes: softDeletes }
