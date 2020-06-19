@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserMeta extends Model
+class UserAppliedJob extends Model
 {
     use SoftDeletes;
 
@@ -16,8 +16,8 @@ class UserMeta extends Model
      */
     protected $fillable = [
         'user_id',
-        'meta_key',
-        'meta_value',
+        'user_job_id',
+        'description',
     ];
 
     /**
@@ -28,11 +28,17 @@ class UserMeta extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
+        'user_job_id' => 'integer',
     ];
 
 
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);
+    }
+
+    public function userJob()
+    {
+        return $this->belongsTo(\App\Models\UserJob::class);
     }
 }

@@ -1,0 +1,167 @@
+models:
+  Skill:
+    id: id
+    en_skill_name: string:100
+    slug: string:100
+    timestamps
+    softDeletes
+
+  Expertise:
+    id: id
+    en_expertise_name: string:100
+    slug: string:100
+    timestamps
+    softDeletes
+
+  Industry:
+    id: id
+    en_industry_name: string:100
+    slug: string:100
+    timestamps
+    softDeletes
+
+  User:
+    id: id
+    name: string:70
+    email: nullable string:100 unique
+    username: nullable string:16 unique
+    password: nullable string:255
+    avatar: nullable string:35
+    verification_confirmed: unsignedTinyInteger default:1
+    status: unsignedTinyInteger default:1
+    type: unsignedTinyInteger
+    subscription_plan: nullable unsignedTinyInteger
+    is_profile_verified: unsignedTinyInteger default:1
+    last_login_at: nullable timestamp
+    timestamps
+    softDeletes
+    relationships:
+      hasMany: UserMeta, UserDeviceToken, UserSocialLogin, UserFreelancer, UserWorkHistory, UserBrand, UserSocialMediaLink, UserProfileVerification, UserJob, UserSavedJob, UserAppliedJob
+
+  UserMeta:
+    id: id
+    user_id: id foreign
+    meta_key: string:30
+    meta_value: nullable string:100
+    timestamps
+    softDeletes
+
+  UserDeviceToken:
+    id: id
+    user_id: id foreign
+    os: unsignedTinyInteger
+    device_id: string:70
+    token: string:255
+    timestamps
+    softDeletes
+
+  UserSocialLogin:
+    id: id
+    user_id: id foreign
+    provider: string:32
+    provider_id: string:100
+    avatar: nullable string:35
+    timestamps
+    softDeletes
+
+  UserFreelancer:
+    id: id
+    user_id: id foreign
+    role: nullable string:100
+    location: nullable string:150
+    latitude: nullable decimal:10,8
+    longitude: nullable decimal:11,8
+    bio: nullable string:600
+    skills: nullable json
+    expertise_id: id foreign
+    rate_currency: nullable unsignedTinyInteger
+    rate: nullable decimal:10,2
+    rate_type: nullable unsignedTinyInteger
+    timestamps
+    softDeletes
+
+  UserWorkHistory:
+    id: id
+    user_id: id foreign
+    job_title: nullable string:100
+    company_name: nullable string:100
+    location: nullable string:150
+    latitude: nullable decimal:10,8
+    longitude: nullable decimal:11,8
+    start_date: nullable timestamp
+    end_date: nullable timestamp
+    currently_working: nullable unsignedTinyInteger
+    description: nullable string:600
+    timestamps
+    softDeletes
+
+  UserBrand:
+    id: id
+    user_id: id foreign
+    brand_name: nullable string:100
+    location: nullable string:150
+    latitude: nullable decimal:10,8
+    longitude: nullable decimal:11,8
+    website: nullable string:200
+    email: nullable string:100
+    overview: nullable string:600
+    industry_id: nullable id foreign
+    timestamps
+    softDeletes
+
+  UserJob:
+    id: id
+    user_id: id foreign
+    title: nullable string:100
+    description: nullable string:600
+    skills: nullable json
+    experience_level: nullable json
+    job_type: nullable unsignedTinyInteger
+    payment_type: nullable unsignedTinyInteger
+    rate_currency: nullable unsignedTinyInteger
+    rate: nullable decimal:10,2
+    rate_type: nullable unsignedTinyInteger
+    work_type: nullable unsignedTinyInteger
+    job_validity_date: nullable timestamp
+    job_expired_date: nullable timestamp
+    status: nullable unsignedTinyInteger
+    timestamps
+    softDeletes
+
+  UserSocialMediaLink:
+    id: id
+    user_id: id foreign
+    website: nullable string:200
+    instagram: nullable string:200
+    dribbble: nullable string:200
+    behance: nullable string:200
+    medium: nullable string:200
+    other: nullable json
+    is_for_user: nullable unsignedTinyInteger
+    timestamps
+    softDeletes
+
+  UserProfileVerification:
+    id: id
+    user_id: id foreign
+    profile_verification_status: nullable unsignedTinyInteger
+    requested_at: nullable timestamp
+    responded_at: nullable timestamp
+    message: nullable string:200
+    timestamps
+    softDeletes
+
+  UserSavedJob:
+    id: id
+    user_id: id foreign
+    user_job_id: id foreign
+    timestamps
+    softDeletes
+
+  UserAppliedJob:
+    id: id
+    user_id: id foreign
+    user_job_id: id foreign
+    description: nullable string:600
+    timestamps
+    softDeletes

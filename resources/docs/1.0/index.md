@@ -1,2 +1,2 @@
 - ## Get Started
-    - [Overview](/{{route}}/{{version}}/overview)
+    - [Api Docs](/{{route}}/{{version}}/overview)

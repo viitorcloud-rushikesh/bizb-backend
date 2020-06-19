@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1\Access;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\APIController;
 use App\Repositories\Api\Access\User\UserInterface as UserRepo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class UserController extends APIController
 {
 
     /**
-     * @author Jaynil Parekh
+     * @param UserRepo $userRepo
      * @since 2020-06-09
      *
      * UserController constructor.
      *
-     * @param UserRepo $userRepo
+     * @author Jaynil Parekh
      */
     public function __construct(UserRepo $userRepo)
     {
@@ -26,43 +26,43 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Change password.
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getUserDetail()
     {
         $response = [];
 
-        try{
-            $response   = $this->userRepo->getUserDetail();
-            $status     = $response['status'];
+        try {
+            $response = $this->userRepo->getUserDetail();
+            $this->setStatusCode($response['status']);
             unset($response['status']);
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response,$status);
+        return $this->respond($response);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Change password.
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function changePassword(Request $request)
     {
         $response = [];
 
-        try{
+        try {
 
             $validation = Validator::make($request->all(), [
                 'current_password' => 'required',
@@ -70,54 +70,85 @@ class UserController extends Controller
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                return $this->throwValidation($validation->messages()->first());
             }
 
             $response = $this->userRepo->changePassword($request->all());
-            $status = $response['status'];
+            $this->setStatusCode($response['status']);
             unset($response['status']);
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response,$status);
+        return $this->respond($response);
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @author Jaynil Parekh
      * @since 2020-06-09
      *
      * Change password.
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function setMpin(Request $request)
     {
         $response = [];
 
-        try{
+        try {
 
             $validation = Validator::make($request->all(), [
                 'email' => 'required',
-                'mpin'  => 'required|max:4',
+                'mpin' => 'required|max:4',
             ]);
 
             if ($validation->fails()) {
-                $response['message']    = $validation->messages()->first();
-                $status                 = 400;
-                return response()->json($response,$status);
+                return $this->throwValidation($validation->messages()->first());
+            }
+            $response = $this->userRepo->setMpin($request->all());
+            $this->setStatusCode($response['status']);
+            unset($response['status']);
+        } catch (\Exception $ex) {
+            Log::error($ex);
+            $this->setStatusCode(403);
+        }
+        return $this->respond($response);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @author Jaynil Parekh
+     * @since 2020-06-09
+     *
+     * Change Four digit pin.
+     *
+     */
+    public function changeMpin(Request $request)
+    {
+        $response = [];
+
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'email' => 'required',
+                'old_mpin' => 'required|max:4',
+                'mpin' => 'required|max:4',
+                'confirm_mpin' => 'required|max:4|same:mpin',
+            ]);
+
+            if ($validation->fails()) {
+                return $this->throwValidation($validation->messages()->first());
             }
 
-            $response = $this->userRepo->setMpin($request->all());
-            $status = $response['status'];
+            $response = $this->userRepo->changeMpin($request->all());
+            $this->setStatusCode($response['status']);
             unset($response['status']);
-        } catch (\Exception $ex){
+        } catch (\Exception $ex) {
             Log::error($ex);
-            $status = 403;
+            $this->setStatusCode(403);
         }
-        return response()->json($response,$status);
+        return $this->respond($response);
     }
 }

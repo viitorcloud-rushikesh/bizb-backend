@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class UserMeta extends Model
+class UserProfileVerification extends Model
 {
     use SoftDeletes;
 
@@ -16,8 +16,10 @@ class UserMeta extends Model
      */
     protected $fillable = [
         'user_id',
-        'meta_key',
-        'meta_value',
+        'profile_verification_status',
+        'requested_at',
+        'responded_at',
+        'message',
     ];
 
     /**
@@ -28,6 +30,17 @@ class UserMeta extends Model
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
+        'profile_verification_status' => 'integer',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'requested_at',
+        'responded_at',
     ];
 
 

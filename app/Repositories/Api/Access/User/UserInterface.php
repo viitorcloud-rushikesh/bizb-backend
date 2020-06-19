@@ -12,7 +12,13 @@ interface UserInterface
 
     public function loginVerification(array $data);
 
+    public function logoutUser();
+
     public function createUser(array $data);
+
+    public function confirmOtp(array $data);
+
+    public function resendOtp(array $data);
 
     public function changePassword(array $data);
 
@@ -21,6 +27,8 @@ interface UserInterface
     public function mPinloginVerification(array $data);
 
     public function setMpin(array $data);
+
+    public function changeMpin(array $data);
 
     public function sendOtpForForgotPassword(array $data);
 
