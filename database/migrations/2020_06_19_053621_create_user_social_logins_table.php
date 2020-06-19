@@ -16,7 +16,7 @@ class CreateUserSocialLoginsTable extends Migration
         Schema::create('user_social_logins', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('provider');
+            $table->string('provider', 100);
             $table->string('provider_id', 100);
             $table->string('avatar', 35)->nullable();
             $table->softDeletes();
