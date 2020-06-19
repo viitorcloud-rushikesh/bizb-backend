@@ -23,7 +23,7 @@ models:
   User:
     id: id
     name: string:70
-    email: string:100 unique
+    email: nullable string:100 unique
     username: nullable string:16 unique
     password: nullable string:255
     avatar: nullable string:35
@@ -58,7 +58,7 @@ models:
   UserSocialLogin:
     id: id
     user_id: id foreign
-    provider: unsignedTinyInteger
+    provider: string:32
     provider_id: string:100
     avatar: nullable string:35
     timestamps

@@ -7,6 +7,7 @@ use DarkGhostHunter\Laraguard\TwoFactorAuthentication;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Concerns\HasSchemalessAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,6 +27,20 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class User extends Authenticatable implements MustVerifyEmail, HasMedia, TwoFactorAuthenticatable
 {
     use HasApiTokens, HasRoles, HasSchemalessAttributes, Hashidable, HasTimezone, HasUserStamps, Impersonate, LogsActivity, Notifiable, ScoutSearch, SoftDeletes, InteractsWithMedia, TwoFactorAuthentication;
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = (string) Str::uuid();
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
